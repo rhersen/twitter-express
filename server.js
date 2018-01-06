@@ -1,29 +1,30 @@
-var express = require('express');
-var request = require('request');
-var parser = require('./parser');
+const express = require('express');
+const request = require('superagent');
+const key = require('./key');
 
-var app = express();
+const app = express();
 
-app.get('/tweets', function (req, res) {
-    request({
-            uri: 'https://api.twitter.com/1.1/statuses/user_timeline.json' +
-               '?user_id=1841700720' +
-               '&exclude_replies=true' +
-               '&include_rts=false' +
-               '&count=200' +
-               '&since_id=446228899090137087' +
-               '',
-            headers: {
-                authorization: "Bearer " + "AAAAAAAAAAAAAAAAAAAAACMAXQAAAAAAYw3Z1oZKNFz52BtTRYdtkfa8Iwc%3DRJihktYblAngUJ9jMdbFBemI1PQO9eDNxbK7tANe8w3r36jH1D"
-            }},
-        function (error, response, body) {
-            res.setHeader('Content-Type', 'application/json');
-            res.send(body);
-        });
+app.get('/tweets', async (_, outgoing) => {
+  const uri = `https://api.twitter.com/1.1/statuses/user_timeline.json?${[
+    'user_id=1841700720',
+    'exclude_replies=true',
+    'include_rts=false',
+    'count=200',
+    'since_id=446228899090137087',
+  ].join('&')}`;
+  try {
+    const incoming = await request
+      .get(uri)
+      .set('authorization', `Bearer ${key()}`);
+    outgoing.json(incoming.body);
+  } catch (e) {
+    outgoing.status(400).json(e.response.body);
+  }
 });
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(`${__dirname}/public`));
 
-var port = 3747;
+const port = 3747;
 app.listen(port);
-console.log('Listening on port ' + port);
+// eslint-disable-next-line no-console
+console.log(`Listening on port ${port}`);
