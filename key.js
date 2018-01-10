@@ -1,3 +1,4 @@
-module.exports = function() {
-  return 'no-token-supplied';
+module.exports = {
+  twitterConsumerKey: 'you-wish',
+  twitterConsumerSecret: 'you-wish',
 };
