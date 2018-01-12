@@ -7,6 +7,7 @@ const inspect = require('util-inspect');
 const oauth = require('oauth');
 
 const key = require('./key');
+const renderBody = require('./renderBody');
 
 const app = express();
 
@@ -85,7 +86,7 @@ app.get('/home', (req, res) => {
   consumer.get(
     `https://api.twitter.com/1.1/statuses/home_timeline.json?${[
       'exclude_replies=true',
-      'include_rts=false',
+      'include_rts=true',
       'count=200',
     ].join('&')}`,
     req.session.oauthAccessToken,
@@ -97,30 +98,8 @@ app.get('/home', (req, res) => {
       } else {
         const parsedData = JSON.parse(data);
         const head = '<head><meta charset=utf-8><title>blah</title></head>';
-        res.send(
-          `<!doctype html><html lang=en>${head}<body>
-             <p>${JSON.stringify(parsedData[4])}</p>
-             <ol>${parsedData
-               .map(d => {
-                 const time = d.created_at.substr(8, 8);
-                 const user = d.user.screen_name;
-                 const text = d.text;
-                 let image = '';
-
-                 if (
-                   d.entities.media &&
-                   d.entities.media[0] &&
-                   d.entities.media[0].type === 'photo'
-                 )
-                   image = `<img src="${
-                     d.entities.media[0].media_url
-                   }:small" />`;
-
-                 return `<li><i>${time}</i> <b>${user}</b> ${text} ${image}</li>`;
-               })
-               .join('\n')}</ol>
-           </body></html>`
-        );
+        const body = renderBody(parsedData);
+        res.send(`<!doctype html><html lang=en>${head}${body}</html>`);
       }
     }
   );
