@@ -103,7 +103,7 @@ app.get('/home', (req, res) => {
         const parsedData = JSON.parse(data);
         parsedData.sort((t1, t2) => t1.id - t2.id);
         const head =
-          '<head><meta charset=utf-8><title>blah</title><link rel = "stylesheet" type = "text/css" href = "s.css" /></head>\n</head>';
+          '<head><meta charset=utf-8><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"><title>blah</title><link rel = "stylesheet" type = "text/css" href = "s.css" /></head>\n</head>';
         const body = renderBody(parsedData);
         res.send(`<!doctype html><html lang=en>${head}${body}</html>`);
       }
