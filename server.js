@@ -115,6 +115,6 @@ app.get('*', (req, res) => {
   res.redirect('/home');
 });
 
-app.listen(8080, () => {
-  console.log('App running on port 8080!');
+app.listen(2006, () => {
+  console.log('App running on port 2006!');
 });
