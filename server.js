@@ -21,6 +21,7 @@ const consumer = new oauth.OAuth(
   'HMAC-SHA1'
 );
 
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -40,8 +41,7 @@ app.get('/sessions/connect', (req, res) => {
     } else {
       req.session.oauthRequestToken = oauthToken;
       req.session.oauthRequestTokenSecret = oauthTokenSecret;
-      console.log('Double check on 2nd step');
-      console.log('------------------------');
+      console.log('in connect');
       console.log(`<<${req.session.oauthRequestToken}`);
       console.log(`<<${req.session.oauthRequestTokenSecret}`);
       res.redirect(
@@ -54,7 +54,7 @@ app.get('/sessions/connect', (req, res) => {
 });
 
 app.get('/sessions/callback', (req, res) => {
-  console.log('------------------------');
+  console.log('in callback');
   console.log(`>>${req.session.oauthRequestToken}`);
   console.log(`>>${req.session.oauthRequestTokenSecret}`);
   console.log(`>>${req.query.oauth_verifier}`);
@@ -83,21 +83,27 @@ app.get('/sessions/callback', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
+  const timeline = `https://api.twitter.com/1.1/statuses/home_timeline.json?${[
+    'tweet_mode=extended',
+    'exclude_replies=true',
+    'include_rts=true',
+    'count=100',
+  ].join('&')}`;
+
   consumer.get(
-    `https://api.twitter.com/1.1/statuses/home_timeline.json?${[
-      'exclude_replies=true',
-      'include_rts=true',
-      'count=200',
-    ].join('&')}`,
+    timeline,
     req.session.oauthAccessToken,
     req.session.oauthAccessTokenSecret,
     (error, data) => {
+      console.log('got response');
       if (error) {
-        //console.log(error)
+        console.log(error);
         res.redirect('/sessions/connect');
       } else {
         const parsedData = JSON.parse(data);
-        const head = '<head><meta charset=utf-8><title>blah</title></head>';
+        parsedData.sort((t1, t2) => t1.id - t2.id);
+        const head =
+          '<head><meta charset=utf-8><title>blah</title><link rel = "stylesheet" type = "text/css" href = "s.css" /></head>\n</head>';
         const body = renderBody(parsedData);
         res.send(`<!doctype html><html lang=en>${head}${body}</html>`);
       }

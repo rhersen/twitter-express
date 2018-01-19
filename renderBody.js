@@ -7,7 +7,7 @@ module.exports = function(tweets) {
 function renderTweet(d) {
   const time = d.created_at ? d.created_at.substr(8, 8) : 'When?';
   const user = d.user ? d.user.screen_name : 'Who?';
-  const text = d.text;
+  const text = d.full_text;
   let image = '';
 
   function addImage(img) {
@@ -20,5 +20,6 @@ function renderTweet(d) {
     d.entities.media.filter(img => img.type === 'photo').forEach(addImage);
   }
 
-  return `<li><i>${time}</i> <b>${user}</b> ${text} ${image}</li>`;
+  const data = JSON.stringify(d).replace(/'/g, '');
+  return `<li onclick='const data = ${data};console.log(data)'><i>${time}</i> <b>${user}</b> ${text} ${image}</li>`;
 }
