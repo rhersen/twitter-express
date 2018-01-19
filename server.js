@@ -17,7 +17,7 @@ const consumer = new oauth.OAuth(
   key.twitterConsumerKey,
   key.twitterConsumerSecret,
   '1.0A',
-  'http://localhost:8080/sessions/callback',
+  'http://twitter.hersen.name/sessions/callback',
   'HMAC-SHA1'
 );
 
