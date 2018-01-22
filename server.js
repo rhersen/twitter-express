@@ -9,6 +9,8 @@ const oauth = require('oauth');
 const key = require('./key');
 const renderBody = require('./renderBody');
 
+let since_id = '954978458752266240';
+
 const app = express();
 
 const consumer = new oauth.OAuth(
@@ -82,16 +84,24 @@ app.get('/sessions/callback', (req, res) => {
   );
 });
 
+app.get('/mark', (req, res) => {
+  console.log('mark', req.query.id);
+  since_id = req.query.id;
+  res.redirect('/home');
+});
+
 app.get('/home', (req, res) => {
-  const timeline = `https://api.twitter.com/1.1/statuses/home_timeline.json?${[
+  const params = [
     'tweet_mode=extended',
     'exclude_replies=true',
     'include_rts=true',
-    'count=100',
-  ].join('&')}`;
+    `since_id=${since_id}`,
+    'count=200',
+  ];
+  const timeline = '/1.1/statuses/home_timeline.json';
 
   consumer.get(
-    timeline,
+    `https://api.twitter.com${timeline}?${params.join('&')}`,
     req.session.oauthAccessToken,
     req.session.oauthAccessTokenSecret,
     (error, data) => {
@@ -102,8 +112,15 @@ app.get('/home', (req, res) => {
       } else {
         const parsedData = JSON.parse(data);
         parsedData.sort((t1, t2) => t1.id - t2.id);
-        const head =
-          '<head><meta charset=utf-8><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"><title>blah</title><link rel = "stylesheet" type = "text/css" href = "s.css" /></head>\n</head>';
+        const content =
+          'width=device-width, initial-scale=1.0, user-scalable=yes';
+        const head = `
+<head>
+  <meta charset=utf-8>
+  <meta name="viewport" content="${content}">
+  <title>Twitter Express</title>
+  <link rel = "stylesheet" type = "text/css" href = "s.css" />
+</head>`;
         const body = renderBody(parsedData);
         res.send(`<!doctype html><html lang=en>${head}${body}</html>`);
       }

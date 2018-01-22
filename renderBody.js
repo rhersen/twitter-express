@@ -21,5 +21,7 @@ function renderTweet(d) {
   }
 
   const data = JSON.stringify(d).replace(/'/g, '');
-  return `<li onclick='const data = ${data};console.log(data)'><i>${time}</i> <b>${user}</b> ${text} ${image}</li>`;
+  return `<li><a href='/mark?id=${
+    d.id_str
+  }'>${time}</a> <b onclick='const data = ${data};console.log(data)'>${user}</b> ${text} ${image}</li>`;
 }
