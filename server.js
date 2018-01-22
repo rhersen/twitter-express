@@ -9,7 +9,12 @@ const oauth = require('oauth');
 const key = require('./key');
 const renderBody = require('./renderBody');
 
-let since_id = '954978458752266240';
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+
+const adapter = new FileSync('db.json');
+const db = low(adapter);
+db.defaults({ last_read: '954978458752266240' }).write();
 
 const app = express();
 
@@ -86,7 +91,7 @@ app.get('/sessions/callback', (req, res) => {
 
 app.get('/mark', (req, res) => {
   console.log('mark', req.query.id);
-  since_id = req.query.id;
+  db.set('last_read', req.query.id).write();
   res.redirect('/home');
 });
 
@@ -95,7 +100,7 @@ app.get('/home', (req, res) => {
     'tweet_mode=extended',
     'exclude_replies=true',
     'include_rts=true',
-    `since_id=${since_id}`,
+    `since_id=${db.get('last_read')}`,
     'count=200',
   ];
   const timeline = '/1.1/statuses/home_timeline.json';
