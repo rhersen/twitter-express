@@ -18,6 +18,14 @@ function renderTweet(d) {
 
   if (d.entities && d.entities.media) {
     d.entities.media.filter(img => img.type === 'photo').forEach(addImage);
+  } else if (
+    d.retweeted_status &&
+    d.retweeted_status.entities &&
+    d.retweeted_status.entities.media
+  ) {
+    d.retweeted_status.entities.media
+      .filter(img => img.type === 'photo')
+      .forEach(addImage);
   }
 
   const data = JSON.stringify(d).replace(/'/g, '');

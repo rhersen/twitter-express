@@ -6,7 +6,7 @@ const session = require('express-session');
 const inspect = require('util-inspect');
 const oauth = require('oauth');
 
-const key = require('./key');
+const config = require('./key');
 const renderBody = require('./renderBody');
 
 const low = require('lowdb');
@@ -21,10 +21,10 @@ const app = express();
 const consumer = new oauth.OAuth(
   'https://twitter.com/oauth/request_token',
   'https://twitter.com/oauth/access_token',
-  key.twitterConsumerKey,
-  key.twitterConsumerSecret,
+  config.twitterConsumerKey,
+  config.twitterConsumerSecret,
   '1.0A',
-  'http://twitter.hersen.name/sessions/callback',
+  `${config.host}/sessions/callback`,
   'HMAC-SHA1'
 );
 
