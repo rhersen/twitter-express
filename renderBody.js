@@ -6,8 +6,15 @@ module.exports = function(tweets) {
 
 function renderTweet(d) {
   const time = d.created_at ? d.created_at.substr(8, 8) : 'When?';
-  const user = d.user ? d.user.screen_name : 'Who?';
-  const text = d.full_text;
+  const user =
+    d.retweeted_status && d.retweeted_status.user
+      ? d.retweeted_status.user.screen_name
+      : d.user ? d.user.screen_name : 'Who?';
+  const retweeter =
+    d.retweeted_status && d.user && d.user.screen_name
+      ? ` <i>${d.user.screen_name}</i> `
+      : ' ';
+  const text = d.retweeted_status ? d.retweeted_status.full_text : d.full_text;
   let image = '';
 
   function addImage(img) {
@@ -18,7 +25,9 @@ function renderTweet(d) {
 
   if (d.entities && d.entities.media) {
     d.entities.media.filter(img => img.type === 'photo').forEach(addImage);
-  } else if (
+  }
+
+  if (
     d.retweeted_status &&
     d.retweeted_status.entities &&
     d.retweeted_status.entities.media
@@ -31,5 +40,5 @@ function renderTweet(d) {
   const data = JSON.stringify(d).replace(/'/g, '');
   return `<li><a href='/mark?id=${
     d.id_str
-  }'>${time}</a> <b onclick='const data = ${data};console.log(data)'>${user}</b> ${text} ${image}</li>`;
+  }'>${time}</a>${retweeter}<b onclick='const data = ${data};console.log(data)'>${user}</b> ${text} ${image}</li>`;
 }
