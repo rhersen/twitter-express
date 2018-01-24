@@ -8,9 +8,7 @@ function renderTweet(d) {
   const rs = d.retweeted_status;
   let image = '';
 
-  addImages(d);
-
-  if (rs) addImages(rs);
+  addImages(rs || d);
 
   const time = d.created_at ? d.created_at.substr(8, 8) : 'When?';
   const data = JSON.stringify(d).replace(/'/g, '');
@@ -25,8 +23,8 @@ function renderTweet(d) {
   return `<li>${a}${i}${b} ${text} ${image}</li>`;
 
   function addImages(d) {
-    if (d.entities && d.entities.media) {
-      d.entities.media.filter(isPhoto).forEach(addImage);
+    if (d.extended_entities && d.extended_entities.media) {
+      d.extended_entities.media.filter(isPhoto).forEach(addImage);
     }
   }
 

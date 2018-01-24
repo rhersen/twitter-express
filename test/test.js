@@ -71,7 +71,7 @@ describe('renderBody', () => {
           created_at: 'Thu Jan 11 06:28:27 +0000 2018',
           full_text: 'What',
           user: { screen_name: 'tjholowaychuk' },
-          entities: {
+          extended_entities: {
             media: [
               {
                 media_url: 'http://pbs.twimg.com/1.jpg',
@@ -123,18 +123,22 @@ describe('renderBody', () => {
         {
           created_at: 'Thu Jan 11 06:28:27 +0000 2018',
           user: { screen_name: 'tjholowaychuk' },
+          extended_entities: {
+            media: [
+              {
+                media_url: 'http://pbs.twimg.com/1.jpg',
+                type: 'photo',
+                sizes: {
+                  thumb: { w: 150, h: 150, resize: 'crop' },
+                  small: { w: 480, h: 280, resize: 'fit' },
+                },
+              },
+            ],
+          },
           retweeted_status: {
             full_text: 'What',
-            entities: {
+            extended_entities: {
               media: [
-                {
-                  media_url: 'http://pbs.twimg.com/1.jpg',
-                  type: 'photo',
-                  sizes: {
-                    thumb: { w: 150, h: 150, resize: 'crop' },
-                    small: { w: 480, h: 280, resize: 'fit' },
-                  },
-                },
                 {
                   media_url: 'http://pbs.twimg.com/2.jpg',
                   type: 'photo',
@@ -150,7 +154,7 @@ describe('renderBody', () => {
       ])
     )
       .to.match(
-        /<ol><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>.*<.b> (.*) <img src="(.*)" width="(.*)" height="(.*)" .><img src="(.*)" width="(.*)" height="(.*)" .><.li><.ol>/
+        /<ol><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>.*<.b> (.*) <img src="(.*)" width="(.*)" height="(.*)" .><.li><.ol>/
       )
       .and.capture(0)
       .equals('11 06:28')
@@ -159,16 +163,10 @@ describe('renderBody', () => {
       .and.capture(2)
       .equals('What')
       .and.capture(3)
-      .equals('http://pbs.twimg.com/1.jpg:small')
+      .equals('http://pbs.twimg.com/2.jpg:small')
       .and.capture(4)
       .equals('240')
       .and.capture(5)
-      .equals('140')
-      .and.capture(6)
-      .equals('http://pbs.twimg.com/2.jpg:small')
-      .and.capture(7)
-      .equals('240')
-      .and.capture(8)
       .equals('140');
   });
 });
