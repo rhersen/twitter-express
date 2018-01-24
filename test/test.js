@@ -169,4 +169,48 @@ describe('renderBody', () => {
       .and.capture(5)
       .equals('140');
   });
+
+  it('urls', () => {
+    expect(
+      renderBody([
+        {
+          full_text: 'That looks... complicated. https://t.co/caieouSG7j',
+          entities: {
+            urls: [{ url: 'https://t.co/caieouSG7j', indices: [27, 50] }],
+          },
+        },
+      ])
+    )
+      .to.match(/<ol><li><a.*>.*<.a> <b.*>.*<.b> (.*) <.li><.ol>/)
+      .and.capture(0)
+      .equals(
+        'That looks... complicated. <a href="https://t.co/caieouSG7j" target="_blank">https://t.co/caieouSG7j</a>'
+      );
+  });
+
+  it('urls in retweet', () => {
+    expect(
+      renderBody([
+        {
+          full_text:
+            'RT @GuardianBooks: A life in quotes: Ursula K Le Guin https://t.co/FEPOtUZuRd',
+          entities: {
+            urls: [{ url: 'https://t.co/FEPOtUZuRd', indices: [54, 77] }],
+          },
+          retweeted_status: {
+            full_text:
+              'A life in quotes: Ursula K Le Guin https://t.co/FEPOtUZuRd',
+            entities: {
+              urls: [{ url: 'https://t.co/FEPOtUZuRd', indices: [35, 58] }],
+            },
+          },
+        },
+      ])
+    )
+      .to.match(/<ol><li><a.*>.*<.a> <b.*>.*<.b> (.*) <.li><.ol>/)
+      .and.capture(0)
+      .equals(
+        'A life in quotes: Ursula K Le Guin <a href="https://t.co/FEPOtUZuRd" target="_blank">https://t.co/FEPOtUZuRd</a>'
+      );
+  });
 });

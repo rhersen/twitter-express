@@ -18,9 +18,8 @@ function renderTweet(d) {
   const i =
     rs && d.user && d.user.screen_name ? ` <i>${d.user.screen_name}</i> ` : ' ';
   const b = `<b onclick='const data = ${data};console.log(data)'>${user}</b>`;
-  const text = rs ? rs.full_text : d.full_text;
 
-  return `<li>${a}${i}${b} ${text} ${image}</li>`;
+  return `<li>${a}${i}${b} ${text(rs, d)} ${image}</li>`;
 
   function addImages(d) {
     if (d.extended_entities && d.extended_entities.media) {
@@ -34,6 +33,19 @@ function renderTweet(d) {
     const height = size.h / 2;
     const src = `${img.media_url}:small`;
     image += `<img src="${src}" width="${width}" height="${height}" />`;
+  }
+}
+
+function text(rs, d) {
+  const data = rs || d;
+
+  if (data.entities && data.entities.urls.length) {
+    const url = data.entities.urls[0];
+    return `${data.full_text.substr(0, url.indices[0])}<a href="${
+      url.url
+    }" target="_blank">${url.url}</a>`;
+  } else {
+    return data.full_text;
   }
 }
 
