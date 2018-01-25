@@ -18,8 +18,9 @@ function renderTweet(d) {
   const i =
     rs && d.user && d.user.screen_name ? ` <i>${d.user.screen_name}</i> ` : ' ';
   const b = `<b onclick='const data = ${data};console.log(data)'>${user}</b>`;
+  const images = image ? `<div>${image}</div>` : image;
 
-  return `<li>${a}${i}${b} ${text(rs, d)} ${image}</li>`;
+  return `<li>${a}${i}${b} ${text(rs, d)} ${images}<hr /></li>`;
 
   function addImages(d) {
     if (d.extended_entities && d.extended_entities.media) {
@@ -36,14 +37,17 @@ function renderTweet(d) {
   }
 }
 
-function text(rs, d) {
-  const data = rs || d;
+function text(retweetStatus, tweetStatus) {
+  const data = retweetStatus || tweetStatus;
 
   if (data.entities && data.entities.urls.length) {
     const url = data.entities.urls[0];
-    return `${data.full_text.substr(0, url.indices[0])}<a href="${
+    return `${data.full_text.substring(0, url.indices[0])}<a href="${
       url.url
-    }" target="_blank">${url.url}</a>`;
+    }" target="_blank">${data.full_text.substring(
+      url.indices[0],
+      url.indices[1]
+    )}</a>${data.full_text.substring(url.indices[1])}`;
   } else {
     return data.full_text;
   }
