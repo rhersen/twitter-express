@@ -1,6 +1,6 @@
 module.exports = function(tweets) {
   return `<body>
-           <ol>${tweets.map(renderTweet).join('\n')}</ol>
+           <ul>${tweets.map(renderTweet).join('\n')}</ul>
          </body>`;
 };
 

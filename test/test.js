@@ -7,7 +7,7 @@ const renderBody = require('../renderBody');
 describe('renderBody', () => {
   it('empty', () => {
     expect(renderBody([{}]))
-      .to.match(/<ol><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <hr .><.li><.ol>/)
+      .to.match(/<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <hr .><.li><.ul>/)
       .and.capture(0)
       .equals('When?')
       .and.capture(1)
@@ -26,7 +26,7 @@ describe('renderBody', () => {
         },
       ])
     )
-      .to.match(/<ol><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <hr .><.li><.ol>/)
+      .to.match(/<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <hr .><.li><.ul>/)
       .and.capture(0)
       .equals('11 06:28')
       .and.capture(1)
@@ -51,7 +51,7 @@ describe('renderBody', () => {
       ])
     )
       .to.match(
-        /<ol><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>(.*)<.b> (.*) <hr .><.li><.ol>/
+        /<ul><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>(.*)<.b> (.*) <hr .><.li><.ul>/
       )
       .and.capture(0)
       .equals('11 06:28')
@@ -94,7 +94,7 @@ describe('renderBody', () => {
       ])
     )
       .to.match(
-        /<ol><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><img src="(.*)" width="(.*)" height="(.*)" .><img src="(.*)" width="(.*)" height="(.*)" .><.div><hr .><.li><.ol>/
+        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><img src="(.*)" width="(.*)" height="(.*)" .><img src="(.*)" width="(.*)" height="(.*)" .><.div><hr .><.li><.ul>/
       )
       .and.capture(0)
       .equals('11 06:28')
@@ -153,7 +153,7 @@ describe('renderBody', () => {
       ])
     )
       .to.match(
-        /<ol><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>.*<.b> (.*) <div><img src="(.*)" width="(.*)" height="(.*)" .><.div><hr .><.li><.ol>/
+        /<ul><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>.*<.b> (.*) <div><img src="(.*)" width="(.*)" height="(.*)" .><.div><hr .><.li><.ul>/
       )
       .and.capture(0)
       .equals('11 06:28')
@@ -180,7 +180,7 @@ describe('renderBody', () => {
         },
       ])
     )
-      .to.match(/<ol><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ol>/)
+      .to.match(/<ul><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ul>/)
       .and.capture(0)
       .equals(
         'That looks... complicated. <a href="https://t.co/caieouSG7j" target="_blank">https://t.co/caieouSG7j</a>'
@@ -206,7 +206,7 @@ describe('renderBody', () => {
         },
       ])
     )
-      .to.match(/<ol><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ol>/)
+      .to.match(/<ul><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ul>/)
       .and.capture(0)
       .equals(
         'A life in quotes: Ursula K Le Guin <a href="https://t.co/FEPOtUZuRd" target="_blank">https://t.co/FEPOtUZuRd</a>'
