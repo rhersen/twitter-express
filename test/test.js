@@ -175,7 +175,13 @@ describe('renderBody', () => {
         {
           full_text: 'That looks... complicated. https://t.co/caieouSG7j',
           entities: {
-            urls: [{ url: 'https://t.co/caieouSG7j', indices: [27, 50] }],
+            urls: [
+              {
+                url: 'https://t.co/caieouSG7j',
+                indices: [27, 50],
+                display_url: 'johndcook.com/blog/2010/01/1…',
+              },
+            ],
           },
         },
       ])
@@ -183,7 +189,7 @@ describe('renderBody', () => {
       .to.match(/<ul><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ul>/)
       .and.capture(0)
       .equals(
-        'That looks... complicated. <a href="https://t.co/caieouSG7j" target="_blank">https://t.co/caieouSG7j</a>'
+        'That looks... complicated. <a href="https://t.co/caieouSG7j" target="_blank">johndcook.com/blog/2010/01/1…</a>'
       );
   });
 

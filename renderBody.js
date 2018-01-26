@@ -44,10 +44,11 @@ function text(retweetStatus, tweetStatus) {
     const url = data.entities.urls[0];
     return `${data.full_text.substring(0, url.indices[0])}<a href="${
       url.url
-    }" target="_blank">${data.full_text.substring(
-      url.indices[0],
-      url.indices[1]
-    )}</a>${data.full_text.substring(url.indices[1])}`;
+    }" target="_blank">${url.display_url ||
+      data.full_text.substring(
+        url.indices[0],
+        url.indices[1]
+      )}</a>${data.full_text.substring(url.indices[1])}`;
   } else {
     return data.full_text;
   }
