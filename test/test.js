@@ -169,16 +169,16 @@ describe('renderBody', () => {
       .equals('140');
   });
 
-  it('urls', () => {
+  it('one url', () => {
     expect(
       renderBody([
         {
-          full_text: 'That looks... complicated. https://t.co/caieouSG7j',
+          full_text: 'before https://t.co/url1',
           entities: {
             urls: [
               {
-                url: 'https://t.co/caieouSG7j',
-                indices: [27, 50],
+                url: 'https://t.co/url1',
+                indices: [7, 24],
                 display_url: 'johndcook.com/blog/2010/01/1…',
               },
             ],
@@ -189,7 +189,36 @@ describe('renderBody', () => {
       .to.match(/<ul><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ul>/)
       .and.capture(0)
       .equals(
-        'That looks... complicated. <a href="https://t.co/caieouSG7j" target="_blank">johndcook.com/blog/2010/01/1…</a>'
+        'before <a href="https://t.co/url1" target="_blank">johndcook.com/blog/2010/01/1…</a>'
+      );
+  });
+
+  it('two urls', () => {
+    expect(
+      renderBody([
+        {
+          full_text: 'before https://t.co/url1 between https://t.co/url2',
+          entities: {
+            urls: [
+              {
+                url: 'https://t.co/url1',
+                indices: [7, 24],
+                display_url: 'johndcook.com/1…',
+              },
+              {
+                url: 'https://t.co/url2',
+                indices: [33, 50],
+                display_url: 'johndcook.com/2…',
+              },
+            ],
+          },
+        },
+      ])
+    )
+      .to.match(/<ul><li><a.*>.*<.a> <b.*>.*<.b> (.*) <hr .><.li><.ul>/)
+      .and.capture(0)
+      .equals(
+        'before <a href="https://t.co/url1" target="_blank">johndcook.com/1…</a> between <a href="https://t.co/url2" target="_blank">johndcook.com/2…</a>'
       );
   });
 

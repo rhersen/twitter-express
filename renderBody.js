@@ -40,18 +40,16 @@ function renderTweet(d) {
 function text(retweetStatus, tweetStatus) {
   const data = retweetStatus || tweetStatus;
 
-  if (data.entities && data.entities.urls.length) {
-    const url = data.entities.urls[0];
-    return `${data.full_text.substring(0, url.indices[0])}<a href="${
-      url.url
-    }" target="_blank">${url.display_url ||
-      data.full_text.substring(
-        url.indices[0],
-        url.indices[1]
-      )}</a>${data.full_text.substring(url.indices[1])}`;
-  } else {
-    return data.full_text;
-  }
+  const extracted = (text, url) => {
+    return text.replace(
+      url.url,
+      `<a href="${url.url}" target="_blank">${url.display_url || url.url}</a>`
+    );
+  };
+
+  return data.entities
+    ? data.entities.urls.reduce(extracted, data.full_text)
+    : data.full_text;
 }
 
 function isPhoto(img) {
