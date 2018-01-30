@@ -63,6 +63,34 @@ describe('renderBody', () => {
       .equals('full');
   });
 
+  it('renders quoted', () => {
+    expect(
+      renderBody([
+        {
+          created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+          full_text: 'abbreviated',
+          user: { screen_name: 'retweeter' },
+          quoted_status: {
+            created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+            full_text: 'quote',
+            user: { screen_name: 'actual' },
+          },
+        },
+      ])
+    )
+      .to.match(
+        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div class="quoted">(.*)<.div><hr .><.li><.ul>/
+      )
+      .and.capture(0)
+      .equals('11 06:28')
+      .and.capture(1)
+      .equals('retweeter')
+      .and.capture(2)
+      .equals('abbreviated')
+      .and.capture(3)
+      .equals('quote');
+  });
+
   it('images', () => {
     expect(
       renderBody([

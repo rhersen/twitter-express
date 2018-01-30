@@ -8,6 +8,10 @@ ul {
   margin: 0 auto;
 }
 
+.quoted {
+  background: lightskyblue;
+}
+
 @media (min-width: 375px) and (max-width: 559px) {
   ul {
     width: 344px;

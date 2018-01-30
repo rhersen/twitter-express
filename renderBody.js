@@ -19,8 +19,11 @@ function renderTweet(d) {
     rs && d.user && d.user.screen_name ? ` <i>${d.user.screen_name}</i> ` : ' ';
   const b = `<b onclick='const data = ${data};console.log(data)'>${user}</b>`;
   const images = image ? `<div>${image}</div>` : image;
+  const quote = d.quoted_status
+    ? `<div class="quoted">${d.quoted_status.full_text}</div>`
+    : '';
 
-  return `<li>${a}${i}${b} ${text(rs, d)} ${images}<hr /></li>`;
+  return `<li>${a}${i}${b} ${text(rs, d)} ${images}${quote}<hr /></li>`;
 
   function addImages(d) {
     if (d.extended_entities && d.extended_entities.media) {
