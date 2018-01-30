@@ -113,7 +113,15 @@ app.get('/home', (req, res) => {
       console.log('got response');
       if (error) {
         console.log(error);
-        res.redirect('/sessions/connect');
+        if (error.statusCode === 429) {
+          res.send(
+            JSON.parse(error.data)
+              .errors.map(error => error.message)
+              .join()
+          );
+        } else {
+          res.redirect('/sessions/connect');
+        }
       } else {
         const parsedData = JSON.parse(data);
         parsedData.sort((t1, t2) => t1.id - t2.id);
