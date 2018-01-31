@@ -91,6 +91,39 @@ describe('renderBody', () => {
       .equals('quote');
   });
 
+  it('renders quote in retweet', () => {
+    expect(
+      renderBody([
+        {
+          created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+          full_text: 'abbreviated',
+          user: { screen_name: 'retweeter' },
+          retweeted_status: {
+            created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+            full_text: 'full',
+            quoted_status: {
+              created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+              full_text: 'quote',
+              user: { screen_name: 'actual' },
+            },
+            user: { screen_name: 'actual' },
+          },
+        },
+      ])
+    )
+      .to.match(
+        /<ul><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>(.*)<.b> (.*) <div class="quoted">(.*)<.div><hr .><.li><.ul>/
+      )
+      .and.capture(0)
+      .equals('11 06:28')
+      .and.capture(1)
+      .equals('retweeter')
+      .and.capture(2)
+      .equals('actual')
+      .and.capture(3)
+      .equals('full');
+  });
+
   it('images', () => {
     expect(
       renderBody([

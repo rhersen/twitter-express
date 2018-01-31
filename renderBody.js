@@ -19,9 +19,7 @@ function renderTweet(d) {
     rs && d.user && d.user.screen_name ? ` <i>${d.user.screen_name}</i> ` : ' ';
   const b = `<b onclick='const data = ${data};console.log(data)'>${user}</b>`;
   const images = image ? `<div>${image}</div>` : image;
-  const quote = d.quoted_status
-    ? `<div class="quoted">${d.quoted_status.full_text}</div>`
-    : '';
+  const quote = getQuote(rs || d);
 
   return `<li>${a}${i}${b} ${text(rs, d)} ${images}${quote}<hr /></li>`;
 
@@ -38,6 +36,12 @@ function renderTweet(d) {
     const src = `${img.media_url}:small`;
     image += `<img src="${src}" width="${width}" height="${height}" />`;
   }
+}
+
+function getQuote(d) {
+  return d.quoted_status
+    ? `<div class="quoted">${d.quoted_status.full_text}</div>`
+    : '';
 }
 
 function text(retweetStatus, tweetStatus) {
