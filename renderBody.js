@@ -54,8 +54,18 @@ function getText(retweetStatus, tweetStatus) {
   const data = retweetStatus || tweetStatus;
 
   return data.entities
-    ? data.entities.urls.reduce(replaceUrlWithLink, data.full_text)
-    : data.full_text;
+    ? data.entities.urls.reduce(replaceUrlWithLink, fullText(data))
+    : fullText(data);
+}
+
+function getQuote(d) {
+  return d.quoted_status
+    ? `<div class="quoted">${fullText(d.quoted_status)}</div>`
+    : '';
+}
+
+function isPhoto(img) {
+  return img.type === 'photo';
 }
 
 function replaceUrlWithLink(text, url) {
@@ -65,12 +75,6 @@ function replaceUrlWithLink(text, url) {
   );
 }
 
-function getQuote(d) {
-  return d.quoted_status
-    ? `<div class="quoted">${d.quoted_status.full_text}</div>`
-    : '';
-}
-
-function isPhoto(img) {
-  return img.type === 'photo';
+function fullText(data) {
+  return data.full_text && data.full_text.replace(/\n/g, '<br>');
 }

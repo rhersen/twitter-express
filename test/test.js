@@ -35,6 +35,25 @@ describe('renderBody', () => {
       .equals('What');
   });
 
+  it('shows line breaks', () => {
+    expect(
+      renderBody([
+        {
+          created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+          full_text: 'line1\nline2\nline3',
+          user: { screen_name: 'tjholowaychuk' },
+        },
+      ])
+    )
+      .to.match(/<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <hr .><.li><.ul>/m)
+      .and.capture(0)
+      .equals('11 06:28')
+      .and.capture(1)
+      .equals('tjholowaychuk')
+      .and.capture(2)
+      .equals('line1<br>line2<br>line3');
+  });
+
   it('renders retweet', () => {
     expect(
       renderBody([
