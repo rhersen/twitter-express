@@ -6,35 +6,38 @@ module.exports = function(tweets) {
 
 function renderTweet(tweet) {
   const retweet = tweet.retweeted_status;
-  let image = '';
-
-  addImages(retweet || tweet);
 
   const time = tweet.created_at ? tweet.created_at.substr(8, 8) : 'When?';
   const data = JSON.stringify(tweet).replace(/'/g, '');
   const user = getUser(retweet, tweet);
+  const image = getImages(retweet || tweet);
 
   const a = `<a href='/mark?id=${tweet.id_str}'>${time}</a>`;
   const i = getRetweeter(retweet, tweet);
   const b = `<b onclick='const data = ${data};console.log(data)'>${user}</b>`;
   const text = getText(retweet, tweet);
-  const images = image ? `<div>${image}</div>` : image;
+  const images = image && `<div>${image}</div>`;
   const quote = getQuote(retweet || tweet);
 
   return `<li>${a}${i}${b} ${text} ${images}${quote}<hr /></li>`;
 
-  function addImages(d) {
-    if (d.extended_entities && d.extended_entities.media) {
-      d.extended_entities.media.filter(isPhoto).forEach(addImage);
+  function getImages(d) {
+    if (!d.extended_entities || !d.extended_entities.media) {
+      return '';
     }
+
+    return d.extended_entities.media
+      .filter(isPhoto)
+      .map(getImage)
+      .join('');
   }
 
-  function addImage(img) {
+  function getImage(img) {
     const size = img.sizes.small;
     const width = size.w / 2;
     const height = size.h / 2;
     const src = `${img.media_url}:small`;
-    image += `<img src="${src}" width="${width}" height="${height}" />`;
+    return `<img src="${src}" width="${width}" height="${height}" />`;
   }
 }
 
