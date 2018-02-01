@@ -30,14 +30,18 @@ function renderTweet(tweet) {
       .filter(isPhoto)
       .map(getImage)
       .join('');
-  }
 
-  function getImage(img) {
-    const size = img.sizes.small;
-    const width = size.w / 2;
-    const height = size.h / 2;
-    const src = `${img.media_url}:small`;
-    return `<img src="${src}" width="${width}" height="${height}" />`;
+    function isPhoto(img) {
+      return img.type === 'photo';
+    }
+
+    function getImage(img) {
+      const size = img.sizes.small;
+      const width = size.w / 2;
+      const height = size.h / 2;
+      const src = `${img.media_url}:small`;
+      return `<img src="${src}" width="${width}" height="${height}" />`;
+    }
   }
 }
 
@@ -59,23 +63,19 @@ function getText(retweetStatus, tweetStatus) {
   return data.entities
     ? data.entities.urls.reduce(replaceUrlWithLink, fullText(data))
     : fullText(data);
+
+  function replaceUrlWithLink(text, url) {
+    return text.replace(
+      url.url,
+      `<a href="${url.url}" target="_blank">${url.display_url || url.url}</a>`
+    );
+  }
 }
 
 function getQuote(d) {
   return d.quoted_status
     ? `<div class="quoted">${fullText(d.quoted_status)}</div>`
     : '';
-}
-
-function isPhoto(img) {
-  return img.type === 'photo';
-}
-
-function replaceUrlWithLink(text, url) {
-  return text.replace(
-    url.url,
-    `<a href="${url.url}" target="_blank">${url.display_url || url.url}</a>`
-  );
 }
 
 function fullText(data) {
