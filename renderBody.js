@@ -35,12 +35,14 @@ function renderTweet(tweet) {
       return img.type === 'photo';
     }
 
-    function getImage(img) {
-      const size = img.sizes.small;
+    function getImage(image) {
+      const size = image.sizes.small;
       const width = size.w / 2;
       const height = size.h / 2;
-      const src = `${img.media_url}:small`;
-      return `<img src="${src}" width="${width}" height="${height}" />`;
+      const small = `${image.media_url}:small`;
+      const large = `${image.media_url}:large`;
+      const img = `<img src="${small}" width="${width}" height="${height}" />`;
+      return `<a href="${large}">${img}</a>`;
     }
   }
 }

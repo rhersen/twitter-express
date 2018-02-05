@@ -156,16 +156,18 @@ describe('renderBody', () => {
                 media_url: 'http://pbs.twimg.com/1.jpg',
                 type: 'photo',
                 sizes: {
-                  thumb: { w: 150, h: 150, resize: 'crop' },
+                  large: { w: 1574, h: 506, resize: 'fit' },
                   small: { w: 480, h: 280, resize: 'fit' },
+                  thumb: { w: 150, h: 150, resize: 'crop' },
                 },
               },
               {
                 media_url: 'http://pbs.twimg.com/2.jpg',
                 type: 'photo',
                 sizes: {
-                  thumb: { w: 150, h: 150, resize: 'crop' },
+                  large: { w: 1574, h: 506, resize: 'fit' },
                   small: { w: 480, h: 280, resize: 'fit' },
+                  thumb: { w: 150, h: 150, resize: 'crop' },
                 },
               },
             ],
@@ -174,7 +176,7 @@ describe('renderBody', () => {
       ])
     )
       .to.match(
-        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><img src="(.*)" width="(.*)" height="(.*)" .><img src="(.*)" width="(.*)" height="(.*)" .><.div><hr .><.li><.ul>/
+        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><a href="(.*)"><img src="(.*)" width="(.*)" height="(.*)" .><.a><a href="(.*)"><img src="(.*)" width="(.*)" height="(.*)" .><.a><.div><hr .><.li><.ul>/
       )
       .and.capture(0)
       .equals('11 06:28')
@@ -183,16 +185,20 @@ describe('renderBody', () => {
       .and.capture(2)
       .equals('What')
       .and.capture(3)
-      .equals('http://pbs.twimg.com/1.jpg:small')
+      .equals('http://pbs.twimg.com/1.jpg:large')
       .and.capture(4)
-      .equals('240')
+      .equals('http://pbs.twimg.com/1.jpg:small')
       .and.capture(5)
-      .equals('140')
-      .and.capture(6)
-      .equals('http://pbs.twimg.com/2.jpg:small')
-      .and.capture(7)
       .equals('240')
+      .and.capture(6)
+      .equals('140')
+      .and.capture(7)
+      .equals('http://pbs.twimg.com/2.jpg:large')
       .and.capture(8)
+      .equals('http://pbs.twimg.com/2.jpg:small')
+      .and.capture(9)
+      .equals('240')
+      .and.capture(10)
       .equals('140');
   });
 
@@ -233,7 +239,7 @@ describe('renderBody', () => {
       ])
     )
       .to.match(
-        /<ul><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>.*<.b> (.*) <div><img src="(.*)" width="(.*)" height="(.*)" .><.div><hr .><.li><.ul>/
+        /<ul><li><a.*>(.*)<.a> <i>(.*)<.i> <b.*>.*<.b> (.*) <div>.*<img src="(.*)" width="(.*)" height="(.*)" .>.*<.div><hr .><.li><.ul>/
       )
       .and.capture(0)
       .equals('11 06:28')
