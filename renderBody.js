@@ -32,7 +32,7 @@ function renderTweet(tweet) {
       .join('');
 
     function isPhoto(img) {
-      return img.type === 'photo';
+      return img.type === 'photo' || img.type === 'video';
     }
 
     function getImage(image) {
@@ -42,7 +42,19 @@ function renderTweet(tweet) {
       const small = `${image.media_url}:small`;
       const large = `${image.media_url}:large`;
       const img = `<img src="${small}" width="${width}" height="${height}" />`;
-      return `<a href="${large}">${img}</a>`;
+      const videoInfo = image.video_info;
+      const duration = getVideoLink(videoInfo);
+      return `<a href="${large}">${img}</a>${duration}`;
+    }
+
+    function getVideoLink(info) {
+      if (!info || !info.variants || !info.variants.length) return '';
+      const best = info.variants.reduce(maxBitrate);
+      return `<a href="${best.url}">${info.duration_millis}ms</a>`;
+    }
+
+    function maxBitrate(prev, cur) {
+      return cur.bitrate > prev.bitrate ? cur : prev;
     }
   }
 }

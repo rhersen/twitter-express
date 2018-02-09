@@ -202,6 +202,61 @@ describe('renderBody', () => {
       .equals('140');
   });
 
+  it('video', () => {
+    expect(
+      renderBody([
+        {
+          created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+          full_text: 'What',
+          user: { screen_name: 'tjholowaychuk' },
+          extended_entities: {
+            media: [
+              {
+                media_url: 'http://pbs.twimg.com/1.jpg',
+                type: 'video',
+                sizes: {
+                  large: { w: 1574, h: 506, resize: 'fit' },
+                  small: { w: 480, h: 280, resize: 'fit' },
+                  thumb: { w: 150, h: 150, resize: 'crop' },
+                },
+                video_info: {
+                  duration_millis: 47076,
+                  variants: [
+                    { bitrate: 256000, url: 'https://video.com/0s.mp4' },
+                    { bitrate: 1280000, url: 'https://video.com/1m.mp4' },
+                    { bitrate: 832000, url: 'https://video.com/fs.mp4' },
+                    { url: 'https://video.com/MAaJfD6YdY91wZ.m3u8' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ])
+    )
+      .to.match(
+        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><a href="(.*)"><img src="(.*)" width="(.*)" height="(.*)" .><.a><a href="(.*)">(.*)<.a><.div><hr .><.li><.ul>/
+      )
+      .and.capture(0)
+      .equals('11 06:28')
+      .and.capture(1)
+      .equals('tjholowaychuk')
+      .and.capture(2)
+      .equals('What')
+      .and.capture(3)
+      .equals('http://pbs.twimg.com/1.jpg:large')
+      .and.capture(4)
+      .equals('http://pbs.twimg.com/1.jpg:small')
+      .and.capture(5)
+      .equals('240')
+      .and.capture(6)
+      .equals('140')
+      .and.capture(7)
+      .equals('https://video.com/1m.mp4')
+      .and.capture(8)
+      .equals('47076ms');
+  });
+
   it('shows images from retweet', () => {
     expect(
       renderBody([
