@@ -257,6 +257,62 @@ describe('renderBody', () => {
       .equals('47076ms');
   });
 
+  it('animated_gif', () => {
+    expect(
+      renderBody([
+        {
+          created_at: 'Wed Feb 21 07:55:29 +0000 2018',
+          id: 966219812455288800,
+          id_str: '966219812455288832',
+          full_text: 'When you’re at the airport',
+          entities: {
+            urls: [],
+          },
+          extended_entities: {
+            media: [
+              {
+                id: 966219803353583600,
+                id_str: '966219803353583616',
+                media_url: 'http://pbs.twimg.com/1.jpg',
+                media_url_https: 'https://pbs.twimg.com/1.jpg',
+                type: 'animated_gif',
+                sizes: {
+                  thumb: { w: 150, h: 150, resize: 'crop' },
+                  small: { w: 488, h: 498, resize: 'fit' },
+                  medium: { w: 488, h: 498, resize: 'fit' },
+                  large: { w: 488, h: 498, resize: 'fit' },
+                },
+                video_info: { variants: [{ url: 'https://video.com/1m.mp4' }] },
+              },
+            ],
+          },
+          user: { id: 813333008, screen_name: 'sarah_edo' },
+        },
+      ])
+    )
+      .to.match(
+        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><a href="(.*)"><img src="(.*)" width="(.*)" height="(.*)" .><.a><a href="(.*)">(.*)<.a><.div><hr .><.li><.ul>/
+      )
+      .and.capture(0)
+      .equals('21 07:55')
+      .and.capture(1)
+      .equals('sarah_edo')
+      .and.capture(2)
+      .equals('When you’re at the airport')
+      .and.capture(3)
+      .equals('http://pbs.twimg.com/1.jpg:large')
+      .and.capture(4)
+      .equals('http://pbs.twimg.com/1.jpg:small')
+      .and.capture(5)
+      .equals('244')
+      .and.capture(6)
+      .equals('249')
+      .and.capture(7)
+      .equals('https://video.com/1m.mp4')
+      .and.capture(8)
+      .equals('animated_gif');
+  });
+
   it('shows images from retweet', () => {
     expect(
       renderBody([

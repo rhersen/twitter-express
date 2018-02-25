@@ -32,7 +32,11 @@ function renderTweet(tweet) {
       .join('');
 
     function isPhoto(img) {
-      return img.type === 'photo' || img.type === 'video';
+      return (
+        img.type === 'photo' ||
+        img.type === 'video' ||
+        img.type === 'animated_gif'
+      );
     }
 
     function getImage(image) {
@@ -42,15 +46,17 @@ function renderTweet(tweet) {
       const small = `${image.media_url}:small`;
       const large = `${image.media_url}:large`;
       const img = `<img src="${small}" width="${width}" height="${height}" />`;
-      const videoInfo = image.video_info;
-      const duration = getVideoLink(videoInfo);
+      const duration = getVideoLink(image.video_info, image.type);
       return `<a href="${large}">${img}</a>${duration}`;
     }
 
-    function getVideoLink(info) {
+    function getVideoLink(info, imageType) {
       if (!info || !info.variants || !info.variants.length) return '';
       const best = info.variants.reduce(maxBitrate);
-      return `<a href="${best.url}">${info.duration_millis}ms</a>`;
+      const duration = info.duration_millis
+        ? `${info.duration_millis}ms`
+        : imageType;
+      return `<a href="${best.url}">${duration}</a>`;
     }
 
     function maxBitrate(prev, cur) {
