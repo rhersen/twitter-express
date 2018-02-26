@@ -60,7 +60,11 @@ function renderTweet(tweet) {
     }
 
     function maxBitrate(prev, cur) {
-      return cur.bitrate > prev.bitrate ? cur : prev;
+      return bitrate(cur) > bitrate(prev) ? cur : prev;
+    }
+
+    function bitrate(variant) {
+      return variant.bitrate || 0;
     }
   }
 }

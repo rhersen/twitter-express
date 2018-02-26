@@ -257,6 +257,77 @@ describe('renderBody', () => {
       .equals('47076ms');
   });
 
+  it('sorts according to bitrate', () => {
+    expect(
+      renderBody([
+        {
+          created_at: 'Thu Jan 11 06:28:27 +0000 2018',
+          full_text: 'What',
+          user: { screen_name: 'tjholowaychuk' },
+          extended_entities: {
+            media: [
+              {
+                media_url: 'http://pbs.twimg.com/1.jpg',
+                type: 'video',
+                sizes: {
+                  large: { w: 1574, h: 506, resize: 'fit' },
+                  small: { w: 480, h: 280, resize: 'fit' },
+                  thumb: { w: 150, h: 150, resize: 'crop' },
+                },
+                video_info: {
+                  aspect_ratio: [16, 9],
+                  duration_millis: 28278,
+                  variants: [
+                    {
+                      content_type: 'application/x-mpegURL',
+                      url: 'https://video.com/pu/pl/8rzTLdAPyMRpMlo8.m3u8',
+                    },
+                    {
+                      bitrate: 2176000,
+                      content_type: 'video/mp4',
+                      url: 'https://video.com/pu/vid/1280x720/AQ.mp4',
+                    },
+                    {
+                      bitrate: 832000,
+                      content_type: 'video/mp4',
+                      url: 'https://video.com/pu/vid/640x360/0j.mp4',
+                    },
+                    {
+                      bitrate: 256000,
+                      content_type: 'video/mp4',
+                      url: 'https://video.com/pu/vid/320x180/qm.mp4',
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ])
+    )
+      .to.match(
+        /<ul><li><a.*>(.*)<.a> <b.*>(.*)<.b> (.*) <div><a href="(.*)"><img src="(.*)" width="(.*)" height="(.*)" .><.a><a href="(.*)">(.*)<.a><.div><hr .><.li><.ul>/
+      )
+      .and.capture(0)
+      .equals('11 06:28')
+      .and.capture(1)
+      .equals('tjholowaychuk')
+      .and.capture(2)
+      .equals('What')
+      .and.capture(3)
+      .equals('http://pbs.twimg.com/1.jpg:large')
+      .and.capture(4)
+      .equals('http://pbs.twimg.com/1.jpg:small')
+      .and.capture(5)
+      .equals('240')
+      .and.capture(6)
+      .equals('140')
+      .and.capture(7)
+      .equals('https://video.com/pu/vid/1280x720/AQ.mp4')
+      .and.capture(8)
+      .equals('28278ms');
+  });
+
   it('animated_gif', () => {
     expect(
       renderBody([
