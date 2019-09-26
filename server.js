@@ -9,13 +9,14 @@ const oauth = require('oauth');
 const config = require('./key');
 const renderBody = require('./renderBody');
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
+const faunadb = require('faunadb');
+const q = faunadb.query;
 
-const adapter = new FileSync('db.json');
-const db = low(adapter);
-db.defaults({ last_read: '954978458752266240' }).write();
+var client = new faunadb.Client({
+  secret: config.fauna,
+});
 
+let db;
 const app = express();
 
 const consumer = new oauth.OAuth(
@@ -52,9 +53,7 @@ app.get('/sessions/connect', (req, res) => {
       console.log(`<<${req.session.oauthRequestToken}`);
       console.log(`<<${req.session.oauthRequestTokenSecret}`);
       res.redirect(
-        `https://twitter.com/oauth/authorize?oauth_token=${
-          req.session.oauthRequestToken
-        }`
+        `https://twitter.com/oauth/authorize?oauth_token=${req.session.oauthRequestToken}`
       );
     }
   });
@@ -89,18 +88,23 @@ app.get('/sessions/callback', (req, res) => {
   );
 });
 
-app.get('/mark', (req, res) => {
+app.get('/mark', async (req, res) => {
   console.log('mark', req.query.id);
-  db.set('last_read', req.query.id).write();
+  try {
+    await client.query(q.Replace(db.ref, { data: { id_str: req.query.id } }));
+  } catch (e) {
+    console.error(e);
+  }
   res.redirect('/home');
 });
 
-app.get('/home', (req, res) => {
+app.get('/home', async (req, res) => {
+  db = await lastRead();
   const params = [
     'tweet_mode=extended',
     'exclude_replies=true',
     'include_rts=true',
-    `since_id=${db.get('last_read')}`,
+    `since_id=${db.data.id_str}`,
     'count=200',
   ];
   const timeline = '/1.1/statuses/home_timeline.json';
@@ -148,3 +152,13 @@ app.get('*', (req, res) => {
 app.listen(2006, () => {
   console.log('App running on port 2006!');
 });
+
+async function lastRead() {
+  try {
+    const ret = await client.query(q.Get(q.Match(q.Index('all_last_read'))));
+    console.log(ret);
+    return ret;
+  } catch (e) {
+    console.error(e);
+  }
+}
