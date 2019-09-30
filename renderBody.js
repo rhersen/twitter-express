@@ -72,7 +72,9 @@ function renderTweet(tweet) {
 function getUser(retweet, d) {
   return retweet && retweet.user
     ? retweet.user.screen_name
-    : d.user ? d.user.screen_name : 'Who?';
+    : d.user
+    ? d.user.screen_name
+    : 'Who?';
 }
 
 function getRetweeter(retweet, d) {
