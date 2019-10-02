@@ -1,8 +1,5 @@
 /* eslint-disable no-console */
 const express = require('express');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 const Twitter = require('twitter');
 
 const config = require('./key');
@@ -26,17 +23,6 @@ const client = new Twitter({
 });
 
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(
-  session({ secret: 'very secret', resave: false, saveUninitialized: true })
-);
-
-app.use((req, res, next) => {
-  res.locals.session = req.session;
-  next();
-});
 
 app.get('/mark', async (req, res) => {
   console.log('mark', req.query.id);
