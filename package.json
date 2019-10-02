@@ -14,9 +14,8 @@
     "express-session": "^1.15.6",
     "faunadb": "^2.8.1",
     "lodash": "^4.17.15",
-    "oauth": "^0.9.15",
     "superagent": "^3.8.2",
-    "util-inspect": "^0.1.8"
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
