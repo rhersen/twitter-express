@@ -62,27 +62,32 @@ app.get('/home', async (req, res) => {
 
   client.get('statuses/home_timeline', params, (error, data, response) => {
     console.log('got response');
-    if (error) {
-      console.log(error, response);
-      if (error.statusCode === 429) {
-        res.send(
-          JSON.parse(error.data)
-            .errors.map(error => error.message)
-            .join()
-        );
-      }
-    } else {
-      const parsedData = data;
-      parsedData.sort((t1, t2) => t1.id - t2.id);
-      const content =
-        'width=device-width, initial-scale=1.0, user-scalable=yes';
-      const head = `
+    const content = 'width=device-width, initial-scale=1.0, user-scalable=yes';
+    const head = `
 <head>
   <meta charset=utf-8>
   <meta name="viewport" content="${content}">
   <title>Twitter Express</title>
   <link rel = "stylesheet" type = "text/css" href = "s.css" />
 </head>`;
+    if (error) {
+      console.log(error, response.body);
+      if (error.statusCode === 429) {
+        res.send(
+          JSON.parse(error.data)
+            .errors.map(error => error.message)
+            .join()
+        );
+      } else {
+        res.send(
+          `<!doctype html><html lang=en>${head}<body><ul>${error.map(
+            err => `<li>${err.message}</li>`
+          )}</ul></body></html>`
+        );
+      }
+    } else {
+      const parsedData = data;
+      parsedData.sort((t1, t2) => t1.id - t2.id);
       const body = renderBody(parsedData);
       res.send(`<!doctype html><html lang=en>${head}${body}</html>`);
     }
