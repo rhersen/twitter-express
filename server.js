@@ -1,20 +1,11 @@
 /* eslint-disable no-console */
 const express = require('express');
-const Twitter = require('twitter');
-
-const config = require('./key');
+const getTweets = require('./getTweets');
 const renderBody = require('./renderBody');
 const fauna = require('./fauna');
 
 let db;
 const app = express();
-
-const client = new Twitter({
-  consumer_key: config.twitterConsumerKey,
-  consumer_secret: config.twitterConsumerSecret,
-  access_token_key: config.twitterAccessToken,
-  access_token_secret: config.twitterAccessTokenSecret,
-});
 
 app.use(express.static('public'));
 
@@ -39,13 +30,6 @@ const head = `
 
 app.get('/', async (req, res) => {
   db = await fauna.lastRead();
-  const params = {
-    tweet_mode: 'extended',
-    exclude_replies: 'true',
-    include_rts: 'true',
-    since_id: db.data.id_str,
-    count: '200',
-  };
 
   if (!db) {
     res.send(
@@ -55,14 +39,6 @@ app.get('/', async (req, res) => {
 
   getTweets(db.data.id_str, (error, data, response) => {
     console.log('got response');
-    const content = 'width=device-width, initial-scale=1.0, user-scalable=yes';
-    const head = `
-<head>
-  <meta charset=utf-8>
-  <meta name="viewport" content="${content}">
-  <title>Twitter Express</title>
-  <link rel = "stylesheet" type = "text/css" href = "s.css" />
-</head>`;
     if (error) {
       console.log(error, response.body);
       if (error.statusCode === 429) {
