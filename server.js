@@ -33,10 +33,10 @@ app.get('/mark', async (req, res) => {
   } catch (e) {
     console.error(e);
   }
-  res.redirect('/home');
+  res.redirect('/');
 });
 
-app.get('/home', async (req, res) => {
+app.get('/', async (req, res) => {
   db = await lastRead();
   const params = {
     tweet_mode: 'extended',
@@ -78,10 +78,6 @@ app.get('/home', async (req, res) => {
       res.send(`<!doctype html><html lang=en>${head}${body}</html>`);
     }
   });
-});
-
-app.get('*', (req, res) => {
-  res.redirect('/home');
 });
 
 app.listen(2006, () => {
