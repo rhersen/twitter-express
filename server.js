@@ -21,9 +21,21 @@ app.use(express.static('public'));
 app.get('/mark', async (req, res) => {
   const id_str = req.query.id;
   console.log('mark', id_str);
+  if (!db) {
+    db = await fauna.lastRead(); // eslint-disable-line require-atomic-updates
+  }
   await fauna.mark(db.ref, id_str);
   res.redirect('/');
 });
+
+const content = 'width=device-width, initial-scale=1.0, user-scalable=yes';
+const head = `
+<head>
+  <meta charset=utf-8>
+  <meta name="viewport" content="${content}">
+  <title>Twitter Express</title>
+  <link rel = "stylesheet" type = "text/css" href = "s.css" />
+</head>`;
 
 app.get('/', async (req, res) => {
   db = await fauna.lastRead();
@@ -35,7 +47,13 @@ app.get('/', async (req, res) => {
     count: '200',
   };
 
-  client.get('statuses/home_timeline', params, (error, data, response) => {
+  if (!db) {
+    res.send(
+      `<!doctype html><html lang=en>${head}<body><ul>could not read from database</ul></body></html>`
+    );
+  }
+
+  getTweets(db.data.id_str, (error, data, response) => {
     console.log('got response');
     const content = 'width=device-width, initial-scale=1.0, user-scalable=yes';
     const head = `
