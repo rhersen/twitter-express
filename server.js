@@ -4,13 +4,7 @@ const Twitter = require('twitter');
 
 const config = require('./key');
 const renderBody = require('./renderBody');
-
-const faunadb = require('faunadb');
-const q = faunadb.query;
-
-const faunaClient = new faunadb.Client({
-  secret: config.fauna,
-});
+const fauna = require('./fauna');
 
 let db;
 const app = express();
@@ -25,19 +19,14 @@ const client = new Twitter({
 app.use(express.static('public'));
 
 app.get('/mark', async (req, res) => {
-  console.log('mark', req.query.id);
-  try {
-    await faunaClient.query(
-      q.Replace(db.ref, { data: { id_str: req.query.id } })
-    );
-  } catch (e) {
-    console.error(e);
-  }
+  const id_str = req.query.id;
+  console.log('mark', id_str);
+  await fauna.mark(db.ref, id_str);
   res.redirect('/');
 });
 
 app.get('/', async (req, res) => {
-  db = await lastRead();
+  db = await fauna.lastRead();
   const params = {
     tweet_mode: 'extended',
     exclude_replies: 'true',
@@ -83,15 +72,3 @@ app.get('/', async (req, res) => {
 app.listen(2006, () => {
   console.log('App running on port 2006!');
 });
-
-async function lastRead() {
-  try {
-    const ret = await faunaClient.query(
-      q.Get(q.Match(q.Index('all_last_read')))
-    );
-    console.log(ret);
-    return ret;
-  } catch (e) {
-    console.error(e);
-  }
-}
