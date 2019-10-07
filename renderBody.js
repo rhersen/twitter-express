@@ -19,7 +19,7 @@ function renderTweet(tweet) {
   const images = image && `<div>${image}</div>`;
   const quote = getQuote(retweet || tweet);
 
-  return `<li>${a}${i}${b} ${text} ${images}${quote}<hr /></li>`;
+  return `<li>${a}${i}${b} ${quote} ${text} ${images}<hr /></li>`;
 
   function getImages(d) {
     if (!d.extended_entities || !d.extended_entities.media) {
