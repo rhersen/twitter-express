@@ -19,8 +19,9 @@ app.get('/mark', async (req, res) => {
   res.redirect('/');
 });
 
-const content = 'width=device-width, initial-scale=1.0, user-scalable=yes';
-const head = `
+app.get('/', async (req, res) => {
+  const content = 'width=device-width, initial-scale=1.0, user-scalable=yes';
+  const head = `
 <head>
   <meta charset=utf-8>
   <meta name="viewport" content="${content}">
@@ -28,7 +29,6 @@ const head = `
   <link rel = "stylesheet" type = "text/css" href = "s.css" />
 </head>`;
 
-app.get('/', async (req, res) => {
   db = await fauna.lastRead();
 
   if (!db) {
