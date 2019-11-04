@@ -7,7 +7,7 @@ const faunaClient = new faunadb.Client({
   secret: config.fauna,
 });
 
-async function lastRead() {
+export async function lastRead() {
   try {
     const ret = await faunaClient.query(
       q.Get(q.Match(q.Index('all_last_read')))
@@ -19,12 +19,10 @@ async function lastRead() {
   }
 }
 
-async function mark(ref, id_str) {
+export async function mark(ref, id_str) {
   try {
     await faunaClient.query(q.Replace(ref, { data: { id_str } }));
   } catch (e) {
     console.error(e);
   }
 }
-
-export default { lastRead, mark };

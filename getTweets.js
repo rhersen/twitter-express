@@ -8,7 +8,7 @@ const client = new Twitter({
   access_token_secret: config.twitterAccessTokenSecret,
 });
 
-export default function getTweets(since_id, handleResponse) {
+export default (since_id, handleResponse) => {
   client.get(
     'statuses/home_timeline',
     {
@@ -20,4 +20,4 @@ export default function getTweets(since_id, handleResponse) {
     },
     handleResponse
   );
-}
+};

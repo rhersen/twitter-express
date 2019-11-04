@@ -1,7 +1,7 @@
 import express from 'express';
 import getTweets from './getTweets.js';
 import renderBody from './renderBody.js';
-import fauna from './fauna.js';
+import * as fauna from './fauna.js';
 
 let db;
 const app = express();

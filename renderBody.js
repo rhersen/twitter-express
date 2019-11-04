@@ -1,8 +1,6 @@
-export default function(tweets) {
-  return `<body>
-           <ul>${tweets.map(renderTweet).join('\n')}</ul>
-         </body>`;
-}
+export default tweets => `<body>
+  <ul>${tweets.map(renderTweet).join('\n')}</ul>
+</body>`;
 
 function renderTweet(tweet) {
   const retweet = tweet.retweeted_status;
