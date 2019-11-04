@@ -2,9 +2,10 @@
   "name": "twitter-express",
   "description": "node/express server for reading Twitter",
   "version": "0.0.1",
+  "type": "module",
   "private": false,
   "scripts": {
-    "start": "node server.js",
+    "start": "node --experimental-modules server.js",
     "test": "eslint *.js && mocha"
   },
   "dependencies": {

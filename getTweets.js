@@ -1,5 +1,5 @@
-const Twitter = require('twitter');
-const config = require('./key');
+import Twitter from 'twitter';
+import config from './key.js';
 
 const client = new Twitter({
   consumer_key: config.twitterConsumerKey,
@@ -8,7 +8,7 @@ const client = new Twitter({
   access_token_secret: config.twitterAccessTokenSecret,
 });
 
-module.exports = function getTweets(since_id, handleResponse) {
+export default function getTweets(since_id, handleResponse) {
   client.get(
     'statuses/home_timeline',
     {
@@ -20,4 +20,4 @@ module.exports = function getTweets(since_id, handleResponse) {
     },
     handleResponse
   );
-};
+}

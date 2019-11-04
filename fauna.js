@@ -1,5 +1,5 @@
-const config = require('./key');
-const faunadb = require('faunadb');
+import config from './key.js';
+import faunadb from 'faunadb';
 
 const q = faunadb.query;
 
@@ -27,4 +27,4 @@ async function mark(ref, id_str) {
   }
 }
 
-module.exports = { lastRead, mark };
+export default { lastRead, mark };

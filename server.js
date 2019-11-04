@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
-const express = require('express');
-const getTweets = require('./getTweets');
-const renderBody = require('./renderBody');
-const fauna = require('./fauna');
+import express from 'express';
+import getTweets from './getTweets.js';
+import renderBody from './renderBody.js';
+import fauna from './fauna.js';
 
 let db;
 const app = express();
